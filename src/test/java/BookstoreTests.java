@@ -11,11 +11,12 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.bookstore.data.TestData.*;
+
 public class BookstoreTests extends BaseTest {
     @Test(priority = 1, description = "Verify that a single book can be added successfully with a valid ISBN")
     public void testAddBookWithValidIsbn() {
-        String isbn = "9781449325862";
-        BookRequest request = new BookRequest(BaseActions.userId, isbn);
+        BookRequest request = new BookRequest(BaseActions.userId, VALID_ISBN_1);
 
         BookResponse response = RestAssured.given()
                 .body(request)
@@ -25,14 +26,14 @@ public class BookstoreTests extends BaseTest {
                 .statusCode(201)
                 .extract().as(BookResponse.class);
 
-        Assert.assertEquals(response.getBooks().getFirst().getIsbn(), isbn, "First book ISBN should match the added ISBN");
+        Assert.assertEquals(response.getBooks().getFirst().getIsbn(), VALID_ISBN_1, "First book ISBN should match the added ISBN");
     }
 
     @Test(priority = 2, description = "Verify that multiple books can be added successfully in a single request")
     public void testAddMultipleBooks() {
         List<Isbns> isbns = Arrays.asList(
-                new Isbns("9781449325862"),
-                new Isbns("9781491950296")
+                new Isbns(VALID_ISBN_1),
+                new Isbns(VALID_ISBN_2)
         );
 
         BookRequest request = new BookRequest(BaseActions.userId, isbns);
@@ -85,7 +86,7 @@ public class BookstoreTests extends BaseTest {
 
     @Test(priority = 5, description = "Verify that adding a book with a empty UserId returns proper error message And Error code should be 1207")
     public void testAddBookWithEmptyUserId() {
-        BookRequest request = new BookRequest(null, "9781449325862");
+        BookRequest request = new BookRequest(null, VALID_ISBN_1);
 
         ErrorResponse errorResponse = RestAssured.given()
                 .body(request)
@@ -101,7 +102,7 @@ public class BookstoreTests extends BaseTest {
 
     @Test(priority = 6, description = "Verify that adding a book with an invalid UserId returns proper error message And Error code should be 1207")
     public void testAddBookWithInvalidUserId() {
-        BookRequest request = new BookRequest("invalid-user", "9781449325862");
+        BookRequest request = new BookRequest("invalid-user", VALID_ISBN_1);
 
         ErrorResponse errorResponse = RestAssured.given()
                 .body(request)
@@ -117,7 +118,7 @@ public class BookstoreTests extends BaseTest {
 
     @Test(priority = 7, description = "Verify that adding a book without authentication returns proper error message And Error code should be 1200")
     public void testAddBookWithoutAuth() {
-        BookRequest request = new BookRequest(BaseActions.userId, "9781449325862");
+        BookRequest request = new BookRequest(BaseActions.userId, VALID_ISBN_1);
 
         ErrorResponse errorResponse = RestAssured.given()
                 .auth().none()

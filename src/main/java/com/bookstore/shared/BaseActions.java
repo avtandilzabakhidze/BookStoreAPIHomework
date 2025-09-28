@@ -4,6 +4,8 @@ import com.bookstore.data.Constants;
 import com.bookstore.models.*;
 import io.restassured.RestAssured;
 
+import java.util.UUID;
+
 import static io.restassured.http.ContentType.JSON;
 
 public class BaseActions {
@@ -14,9 +16,7 @@ public class BaseActions {
 
     public static void registerUser() {
         RestAssured.baseURI = Constants.BASE_URI;
-
-        username = "user_" + System.currentTimeMillis();
-        password = "Passw0rd@" + System.currentTimeMillis();
+        generateCredentials();
 
         UserRequest userRequest = new UserRequest(username, password);
         UserResponse userResponse = RestAssured.given()
@@ -26,7 +26,8 @@ public class BaseActions {
                 .post(Constants.USER_ENDPOINT)
                 .then()
                 .statusCode(201)
-                .extract().as(UserResponse.class);
+                .extract()
+                .as(UserResponse.class);
 
         userId = userResponse.getUserID();
     }
@@ -40,8 +41,15 @@ public class BaseActions {
                 .post(Constants.TOKEN_ENDPOINT)
                 .then()
                 .statusCode(200)
-                .extract().as(TokenResponse.class);
+                .extract()
+                .as(TokenResponse.class);
 
         token = tokenResponse.getToken();
+    }
+
+    private static void generateCredentials() {
+        String suffix = UUID.randomUUID().toString().substring(0, 5);
+        username = "user_" + suffix;
+        password = "Passw0rd@" + suffix;
     }
 }
