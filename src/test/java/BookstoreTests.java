@@ -4,26 +4,10 @@ import com.bookstore.models.BookResponse;
 import com.bookstore.models.ErrorResponse;
 import com.bookstore.shared.BaseActions;
 import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.specification.RequestSpecification;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static io.restassured.http.ContentType.JSON;
-
 public class BookstoreTests extends BaseTest {
-    @BeforeMethod
-    public void beforeMethod() {
-        RequestSpecification spec = new RequestSpecBuilder()
-                .setBaseUri(Constants.BASE_URI)
-                .setContentType(JSON)
-                .setAuth(RestAssured.oauth2(BaseActions.token))
-                .build();
-
-        RestAssured.requestSpecification = spec;
-    }
-
     @Test(priority = 1)
     public void addBookPositive() {
         BookRequest request = new BookRequest(BaseActions.userId, "9781449325862");
