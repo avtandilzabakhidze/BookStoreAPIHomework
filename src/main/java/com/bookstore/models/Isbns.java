@@ -1,23 +1,14 @@
 package com.bookstore.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Isbns {
-
-    @JsonProperty("isbn")
     private String isbn;
-
-    public Isbns(String isbn) {
-        this.isbn = isbn;
-    }
-
-    public String getIsbn() {
-        return isbn;
-    }
-
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
 }
